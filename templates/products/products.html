@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">All Products</h2>
+
+<div class="row">
+
+{% for product in products %}
+
+<div class="col-md-3 mb-4">
+
+    <div class="card shadow h-100">
+
+        {% if product.image %}
+            <img src="{{ product.image.url }}"
+                 class="card-img-top"
+                 style="height:250px; object-fit:cover;">
+        {% else %}
+            <img src="https://placehold.co/300x250"
+                 class="card-img-top">
+        {% endif %}
+
+        <div class="card-body">
+
+            <h5>{{ product.name }}</h5>
+
+            <p>{{ product.description|truncatewords:10 }}</p>
+
+            <h4 class="text-primary">
+                Rs. {{ product.price }}
+            </h4>
+
+            <a href="{% url 'product_detail' product.id %}"
+                class="btn btn-primary w-100">
+                View Details
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
