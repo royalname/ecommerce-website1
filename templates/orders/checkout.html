@@ -8,7 +8,8 @@
         Checkout
     </h2>
 
-    <form>
+    <form method="POST" action="{% url 'place_order' %}">
+    {% csrf_token %}
 
         <div class="row">
 
@@ -19,10 +20,11 @@
                 </label>
 
                 <input
-                    type="text"
-                    class="form-control"
-                    value="{{ request.user.get_full_name }}"
-                >
+    type="text"
+    name="full_name"
+    class="form-control"
+    value="{{ request.user.get_full_name }}"
+    required>
 
             </div>
 
@@ -33,10 +35,11 @@
                 </label>
 
                 <input
-                    type="email"
-                    class="form-control"
-                    value="{{ request.user.email }}"
-                >
+    type="email"
+    name="email"
+    class="form-control"
+    value="{{ request.user.email }}"
+    required>
 
             </div>
 
@@ -48,11 +51,15 @@
                 Phone Number
             </label>
 
-            <input
-                type="text"
-                class="form-control"
-                placeholder="Enter phone number"
-            >
+ <input
+    type="tel"
+    name="phone"
+    class="form-control"
+    placeholder="98XXXXXXXX"
+    pattern="[0-9]{10}"
+    maxlength="10"
+    minlength="10"
+    required>
 
         </div>
 
@@ -63,9 +70,11 @@
             </label>
 
             <textarea
-                class="form-control"
-                rows="4"
-                placeholder="Enter delivery address"></textarea>
+    name="address"
+    class="form-control"
+    rows="4"
+    placeholder="Enter delivery address"
+    required></textarea>
 
         </div>
 

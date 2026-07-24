@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 from cart.models import Cart, CartItem
+from .models import Order, OrderItem
 
 
 @login_required
@@ -21,3 +24,123 @@ def checkout(request):
     }
 
     return render(request, "orders/checkout.html", context)
+
+
+@login_required
+def place_order(request):
+
+    if request.method == "POST":
+
+        phone = request.POST["phone"]
+
+        # Phone Number Validation
+        if not phone.isdigit() or len(phone) != 10:
+            messages.error(
+                request,
+                "Phone number must contain exactly 10 digits."
+            )
+            return redirect("checkout")
+
+        cart = get_object_or_404(Cart, user=request.user)
+
+        items = CartItem.objects.filter(cart=cart)
+
+        total = sum(item.subtotal() for item in items)
+
+        order = Order.objects.create(
+            user=request.user,
+            full_name=request.POST["full_name"],
+            phone=phone,
+            email=request.POST["email"],
+            address=request.POST["address"],
+            total_amount=total,
+        )
+
+        for item in items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=item.product.price,
+            )
+
+        items.delete()
+
+        return redirect("payment", order_id=order.id)
+
+    return redirect("checkout")
+
+
+@login_required
+def order_success(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id)
+
+    return render(
+        request,
+        "orders/order_success.html",
+        {
+            "order": order
+        }
+    )
+
+
+@login_required
+def payment(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    if request.method == "POST":
+
+        order.payment_method = request.POST.get("payment_method")
+
+        if "payment_screenshot" in request.FILES:
+            order.payment_screenshot = request.FILES["payment_screenshot"]
+
+        order.payment_status = "Pending Verification"
+
+        order.save()
+
+        return redirect("payment_success", order.id)
+
+    return render(
+        request,
+        "orders/payment.html",
+        {
+            "order": order
+        }
+    )
+
+
+@login_required
+def payment_success(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    return redirect(
+        "order_success",
+        order_id=order.id
+    )
+
+@login_required
+def my_orders(request):
+
+    orders = Order.objects.filter(
+        user=request.user
+    ).order_by("-id")
+
+    return render(
+        request,
+        "orders/my_orders.html",
+        {
+            "orders": orders
+        }
+    )

@@ -56,3 +56,19 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.product.name
+
+    payment_method = models.CharField(
+    max_length=20,
+    blank=True
+)
+
+payment_screenshot = models.ImageField(
+    upload_to="payments/",
+    blank=True,
+    null=True
+)
+
+payment_status = models.CharField(
+    max_length=20,
+    default="Pending"
+)
