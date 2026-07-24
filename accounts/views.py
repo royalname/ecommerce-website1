@@ -44,8 +44,8 @@ def user_login(request):
 
     if request.method == "POST":
 
-        username = request.POST["username"]
-        password = request.POST["password"]
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         user = authenticate(
             request,
@@ -57,7 +57,16 @@ def user_login(request):
 
             login(request, user)
 
+            next_url = request.GET.get("next")
+
+            if next_url:
+                return redirect(next_url)
+
             return redirect("home")
+
+        else:
+
+            messages.error(request, "Invalid username or password.")
 
     return render(request, "accounts/login.html")
 
