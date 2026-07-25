@@ -30,24 +30,141 @@
             Stock: {{ product.stock }}
         </h5>
 
-        <button class="btn btn-success btn-lg mt-3">
-          {% if user.is_authenticated %}
+        <br>
 
-<a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-lg">
-    <i class="bi bi-cart-plus"></i> Add to Cart
-</a>
+        {% if user.is_authenticated %}
 
-{% else %}
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-cart-plus"></i> Add to Cart
+        </a>
 
-<a href="{% url 'login' %}" class="btn btn-primary btn-lg">
-    <i class="bi bi-box-arrow-in-right"></i> Login to Add to Cart
-</a>
+        {% else %}
 
-{% endif %}
-        </button>
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right"></i> Login to Add to Cart
+        </a>
+
+        {% endif %}
 
     </div>
 
 </div>
+
+<hr class="my-5">
+
+<h3>Customer Reviews</h3>
+
+{% if user.is_authenticated %}
+
+<div class="card shadow p-4 mb-4">
+
+    <form method="POST" action="{% url 'add_review' product.id %}">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Rating
+            </label>
+
+            <select
+                name="rating"
+                class="form-select"
+                required>
+
+                <option value="">Select Rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                <option value="4">⭐⭐⭐⭐ (4)</option>
+                <option value="3">⭐⭐⭐ (3)</option>
+                <option value="2">⭐⭐ (2)</option>
+                <option value="1">⭐ (1)</option>
+
+            </select>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Your Review
+            </label>
+
+            <textarea
+                name="comment"
+                class="form-control"
+                rows="4"
+                required></textarea>
+
+        </div>
+
+        <button
+            class="btn btn-success">
+
+            Submit Review
+
+        </button>
+
+    </form>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+    Please <a href="{% url 'login' %}">login</a> to write a review.
+
+</div>
+
+{% endif %}
+
+{% if reviews %}
+
+    {% for review in reviews %}
+
+    <div class="card shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <h5>
+
+                {{ review.user.username }}
+
+            </h5>
+
+            <p class="text-warning">
+
+                Rating: {{ review.rating }}/5 ⭐
+
+            </p>
+
+            <p>
+
+                {{ review.comment }}
+
+            </p>
+
+            <small class="text-muted">
+
+                {{ review.created_at }}
+
+            </small>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+<div class="alert alert-secondary">
+
+    No reviews yet.
+
+</div>
+
+{% endif %}
 
 {% endblock %}

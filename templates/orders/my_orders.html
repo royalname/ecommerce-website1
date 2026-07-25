@@ -10,16 +10,17 @@
 
     {% if orders %}
 
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped table-hover">
 
         <thead class="table-dark">
 
             <tr>
                 <th>Order ID</th>
                 <th>Date</th>
-                <th>Total</th>
-                <th>Payment</th>
-                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Payment Method</th>
+                <th>Payment Status</th>
+                <th>Order Status</th>
             </tr>
 
         </thead>
@@ -28,47 +29,85 @@
 
         {% for order in orders %}
 
-            <tr>
+        <tr>
 
-                <td>#{{ order.id }}</td>
+            <td>#{{ order.id }}</td>
 
-                <td>{{ order.created_at }}</td>
+            <td>{{ order.created_at }}</td>
 
-                <td>Rs. {{ order.total_amount }}</td>
+            <td>Rs. {{ order.total_amount }}</td>
 
-                <td>{{ order.payment_method }}</td>
+            <td>{{ order.payment_method }}</td>
 
-                <td>
+            <!-- Payment Status -->
+            <td>
 
-                    {% if order.payment_status == "Pending Verification" %}
+                {% if order.payment_status == "Pending Verification" %}
 
-                        <span class="badge bg-warning text-dark">
+                    <span class="badge bg-warning text-dark">
+                        Pending Verification
+                    </span>
 
-                            Pending Verification
+                {% elif order.payment_status == "Verified" %}
 
-                        </span>
+                    <span class="badge bg-success">
+                        Verified
+                    </span>
 
-                    {% elif order.payment_status == "Verified" %}
+                {% elif order.payment_status == "Rejected" %}
 
-                        <span class="badge bg-success">
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
 
-                            Verified
+                {% else %}
 
-                        </span>
+                    <span class="badge bg-secondary">
+                        {{ order.payment_status }}
+                    </span>
 
-                    {% else %}
+                {% endif %}
 
-                        <span class="badge bg-secondary">
+            </td>
 
-                            {{ order.payment_status }}
+            <!-- Order Status -->
+            <td>
 
-                        </span>
+                {% if order.status == "Pending" %}
 
-                    {% endif %}
+                    <span class="badge bg-warning text-dark">
+                        Pending
+                    </span>
 
-                </td>
+                {% elif order.status == "Confirmed" %}
 
-            </tr>
+                    <span class="badge bg-primary">
+                        Confirmed
+                    </span>
+
+                {% elif order.status == "Shipped" %}
+
+                    <span class="badge bg-info text-dark">
+                        Shipped
+                    </span>
+
+                {% elif order.status == "Delivered" %}
+
+                    <span class="badge bg-success">
+                        Delivered
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-secondary">
+                        {{ order.status }}
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
 
         {% endfor %}
 
@@ -78,11 +117,13 @@
 
     {% else %}
 
-    <div class="alert alert-info">
+        <div class="alert alert-info">
 
-        You haven't placed any orders yet.
+            <h5>No Orders Found</h5>
 
-    </div>
+            <p>You haven't placed any orders yet.</p>
+
+        </div>
 
     {% endif %}
 

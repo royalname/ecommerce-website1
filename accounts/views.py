@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from .models import Feedback
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -76,3 +78,26 @@ def user_logout(request):
     logout(request)
 
     return redirect("home")
+
+@login_required
+def feedback(request):
+
+    if request.method == "POST":
+
+        Feedback.objects.create(
+            user=request.user,
+            subject=request.POST["subject"],
+            message=request.POST["message"],
+        )
+
+        messages.success(
+            request,
+            "Thank you! Your feedback has been submitted successfully."
+        )
+
+        return redirect("feedback")
+
+    return render(
+        request,
+        "accounts/feedback.html"
+    )

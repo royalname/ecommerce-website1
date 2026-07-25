@@ -72,20 +72,6 @@ def place_order(request):
 
 
 @login_required
-def order_success(request, order_id):
-
-    order = get_object_or_404(Order, id=order_id)
-
-    return render(
-        request,
-        "orders/order_success.html",
-        {
-            "order": order
-        }
-    )
-
-
-@login_required
 def payment(request, order_id):
 
     order = get_object_or_404(
@@ -96,7 +82,15 @@ def payment(request, order_id):
 
     if request.method == "POST":
 
-        order.payment_method = request.POST.get("payment_method")
+        payment_method = request.POST.get("payment_method")
+
+        print("Payment Method:", payment_method)
+
+        if not payment_method:
+            messages.error(request, "Please select a payment method.")
+            return redirect("payment", order_id=order.id)
+
+        order.payment_method = payment_method
 
         if "payment_screenshot" in request.FILES:
             order.payment_screenshot = request.FILES["payment_screenshot"]
@@ -129,6 +123,21 @@ def payment_success(request, order_id):
         "order_success",
         order_id=order.id
     )
+
+
+@login_required
+def order_success(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id)
+
+    return render(
+        request,
+        "orders/order_success.html",
+        {
+            "order": order
+        }
+    )
+
 
 @login_required
 def my_orders(request):

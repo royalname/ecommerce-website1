@@ -21,7 +21,10 @@ class Order(models.Model):
 
     address = models.TextField()
 
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
 
     status = models.CharField(
         max_length=20,
@@ -29,7 +32,25 @@ class Order(models.Model):
         default="Pending"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    payment_method = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    payment_screenshot = models.ImageField(
+        upload_to="payments/",
+        blank=True,
+        null=True
+    )
+
+    payment_status = models.CharField(
+        max_length=30,
+        default="Pending Verification"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
 
     def __str__(self):
         return f"Order #{self.id} - {self.user.username}"
@@ -49,26 +70,13 @@ class OrderItem(models.Model):
 
     quantity = models.PositiveIntegerField()
 
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
 
     def subtotal(self):
         return self.price * self.quantity
 
     def __str__(self):
         return self.product.name
-
-    payment_method = models.CharField(
-    max_length=20,
-    blank=True
-)
-
-payment_screenshot = models.ImageField(
-    upload_to="payments/",
-    blank=True,
-    null=True
-)
-
-payment_status = models.CharField(
-    max_length=20,
-    default="Pending"
-)
