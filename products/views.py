@@ -1,14 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Product, Review, Category
 from django.db.models import Q
+
+from .models import Product, Review, Category
 
 
 def product_list(request):
 
     query = request.GET.get("q")
+    category_id = request.GET.get("category")
 
     products = Product.objects.all()
+    categories = Category.objects.all()
 
     if query:
         products = products.filter(
@@ -16,14 +19,22 @@ def product_list(request):
             Q(description__icontains=query)
         )
 
+    if category_id:
+        products = products.filter(
+            category_id=category_id
+        )
+
     return render(
         request,
         "products/products.html",
         {
             "products": products,
-            "query": query
+            "categories": categories,
+            "query": query,
+            "selected_category": category_id,
         }
     )
+
 
 def product_detail(request, id):
 
