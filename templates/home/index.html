@@ -2,7 +2,72 @@
 
 {% block content %}
 
+{% if user.is_superuser %}
+
+<!-- Dashboard -->
+
+<div class="row mb-5">
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-primary text-white">
+            <div class="card-body">
+                <h3>{{ total_products }}</h3>
+                <p class="mb-0">Products</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-success text-white">
+            <div class="card-body">
+                <h3>{{ total_categories }}</h3>
+                <p class="mb-0">Categories</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-warning text-dark">
+            <div class="card-body">
+                <h3>{{ total_orders }}</h3>
+                <p class="mb-0">Orders</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-info text-white">
+            <div class="card-body">
+                <h3>{{ total_users }}</h3>
+                <p class="mb-0">Users</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-danger text-white">
+            <div class="card-body">
+                <h3>{{ total_reviews }}</h3>
+                <p class="mb-0">Reviews</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 mb-3">
+        <div class="card text-center shadow border-0 bg-dark text-white">
+            <div class="card-body">
+                <h6>Total Sales</h6>
+                <h5>Rs. {{ total_sales }}</h5>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endif %}
+
 <!-- Hero Section -->
+
 <div class="bg-primary text-white text-center rounded-4 p-5 mb-5">
 
     <h1 class="display-4 fw-bold">
@@ -13,17 +78,18 @@
         Discover Amazing Products at Affordable Prices
     </p>
 
-    <a href="#" class="btn btn-light btn-lg me-2">
+    <a href="{% url 'products' %}" class="btn btn-light btn-lg me-2">
         Shop Now
     </a>
 
-    <a href="#" class="btn btn-outline-light btn-lg">
+    <a href="{% url 'products' %}" class="btn btn-outline-light btn-lg">
         Explore Products
     </a>
 
 </div>
 
 <!-- Categories -->
+
 <h2 class="text-center mb-4">
     Shop by Category
 </h2>
@@ -69,6 +135,7 @@
 </div>
 
 <!-- Featured Products -->
+
 <h2 class="text-center mt-5 mb-4">
     Featured Products
 </h2>
@@ -94,16 +161,14 @@
 
             <h5>{{ product.name }}</h5>
 
-            <p>
-                {{ product.description|truncatewords:12 }}
-            </p>
+            <p>{{ product.description|truncatewords:12 }}</p>
 
             <h4 class="text-primary">
                 Rs. {{ product.price }}
             </h4>
 
             <a href="{% url 'product_detail' product.id %}"
-                class="btn btn-primary w-100">
+               class="btn btn-primary w-100">
                 View Details
             </a>
 
@@ -116,14 +181,10 @@
 {% empty %}
 
 <div class="text-center">
-
     <h4>No products available.</h4>
-
 </div>
 
 {% endfor %}
-
-</div>
 
 </div>
 
