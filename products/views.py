@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
 
 from .models import Product, Review, Category
 
@@ -10,7 +10,10 @@ def product_list(request):
     query = request.GET.get("q")
     category_id = request.GET.get("category")
 
-    products = Product.objects.all()
+    products = Product.objects.annotate(
+    average_rating=Avg("reviews__rating"),
+    review_count=Count("reviews")
+)
     categories = Category.objects.all()
 
     if query:
@@ -44,6 +47,12 @@ def product_detail(request, id):
         product=product
     ).order_by("-created_at")
 
+    average_rating = reviews.aggregate(
+        Avg("rating")
+    )["rating__avg"]
+
+    review_count = reviews.count()
+
     related_products = Product.objects.filter(
         category=product.category
     ).exclude(
@@ -57,6 +66,8 @@ def product_detail(request, id):
             "product": product,
             "reviews": reviews,
             "related_products": related_products,
+            "average_rating": average_rating,
+            "review_count": review_count,
         }
     )
 

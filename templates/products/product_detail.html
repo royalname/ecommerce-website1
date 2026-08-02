@@ -22,6 +22,36 @@
             Rs. {{ product.price }}
         </h3>
 
+        <div class="mb-3">
+
+    {% if average_rating %}
+
+        <span class="text-warning fs-5">
+
+            ★★★★★
+
+        </span>
+
+        <strong>
+
+            {{ average_rating|floatformat:1 }}/5
+
+        </strong>
+
+        ({{ review_count }} review{{ review_count|pluralize }})
+
+    {% else %}
+
+        <span class="text-muted">
+
+            No reviews yet.
+
+        </span>
+
+    {% endif %}
+
+</div>
+
         <p class="mt-4">
             {{ product.description }}
         </p>
