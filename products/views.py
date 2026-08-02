@@ -44,12 +44,19 @@ def product_detail(request, id):
         product=product
     ).order_by("-created_at")
 
+    related_products = Product.objects.filter(
+        category=product.category
+    ).exclude(
+        id=product.id
+    )[:4]
+
     return render(
         request,
         "products/product_detail.html",
         {
             "product": product,
-            "reviews": reviews
+            "reviews": reviews,
+            "related_products": related_products,
         }
     )
 
