@@ -138,6 +138,28 @@ def order_success(request, order_id):
         }
     )
 
+@login_required
+def invoice(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    order_items = OrderItem.objects.filter(
+        order=order
+    )
+
+    return render(
+        request,
+        "orders/invoice.html",
+        {
+            "order": order,
+            "order_items": order_items,
+        }
+    )
+
 
 @login_required
 def my_orders(request):
