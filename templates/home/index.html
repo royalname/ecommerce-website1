@@ -167,6 +167,34 @@
                 Rs. {{ product.price }}
             </h4>
 
+            {% if product.review_count %}
+
+<p class="mb-2">
+
+    <span class="text-warning">
+        ★★★★★
+    </span>
+
+    <strong>
+        {{ product.average_rating|floatformat:1 }}/5
+    </strong>
+
+    <small class="text-muted">
+        ({{ product.review_count }} review{{ product.review_count|pluralize }})
+    </small>
+
+</p>
+
+{% else %}
+
+<p class="text-muted mb-2">
+
+    No reviews yet
+
+</p>
+
+{% endif %}
+
             <a href="{% url 'product_detail' product.id %}"
                class="btn btn-primary w-100">
                 View Details

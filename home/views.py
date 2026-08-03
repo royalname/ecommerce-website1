@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Avg, Count
 
 from products.models import Product, Category, Review
 from orders.models import Order
@@ -8,7 +8,10 @@ from orders.models import Order
 
 def home(request):
 
-    products = Product.objects.all()[:8]
+    products = Product.objects.annotate(
+    average_rating=Avg("reviews__rating"),
+    review_count=Count("reviews")
+)[:8]
 
     total_products = Product.objects.count()
 
