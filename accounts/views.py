@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from .models import Feedback
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-
 
 def register(request):
 
@@ -100,4 +101,67 @@ def feedback(request):
     return render(
         request,
         "accounts/feedback.html"
+    )
+
+@login_required
+def profile(request):
+
+    user = request.user
+
+    if request.method == "POST":
+
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.email = request.POST.get("email")
+
+        user.save()
+
+        messages.success(
+            request,
+            "Profile updated successfully."
+        )
+
+        return redirect("profile")
+
+    return render(
+        request,
+        "accounts/profile.html"
+    )
+
+@login_required
+def change_password(request):
+
+    if request.method == "POST":
+
+        form = PasswordChangeForm(
+            request.user,
+            request.POST
+        )
+
+        if form.is_valid():
+
+            user = form.save()
+
+            update_session_auth_hash(
+                request,
+                user
+            )
+
+            messages.success(
+                request,
+                "Your password has been changed successfully."
+            )
+
+            return redirect("profile")
+
+    else:
+
+        form = PasswordChangeForm(request.user)
+
+    return render(
+        request,
+        "accounts/change_password.html",
+        {
+            "form": form
+        }
     )
