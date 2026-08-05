@@ -1,185 +1,231 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Nepal</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<title>Royal Nepal</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
 </head>
 
 <body>
 
 <!-- ================= NAVBAR ================= -->
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow fixed-top">
 
-    <div class="container">
+<div class="container">
 
-        <a class="navbar-brand fw-bold" href="/">
-            <i class="bi bi-shop"></i> Royal Nepal
-        </a>
-
-        <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav">
-
-            <span class="navbar-toggler-icon"></span>
-
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-
-            <!-- Left Menu -->
-
-            <ul class="navbar-nav me-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        Home
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/">
-                        Products
-                    </a>
-                </li>
-
-                <li class="nav-item">
-    <a class="nav-link" href="{% url 'products' %}">
-        Categories
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+        <i class="bi bi-shop"></i>
+        Royal Nepal
     </a>
-</li>
 
-                <li class="nav-item">
-    <a class="nav-link" href="{% url 'about' %}">
-        About
-    </a>
-</li>
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'feedback' %}">
-                        Feedback
-                    </a>
-                </li>
+        <span class="navbar-toggler-icon"></span>
 
-            </ul>
+    </button>
 
-            <!-- Search Bar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-            <form class="d-flex me-3"
-                  method="GET"
-                  action="{% url 'products' %}">
+        <!-- Left Menu -->
 
-                <input
-                    class="form-control me-2"
-                    type="search"
-                    name="q"
-                    placeholder="Search products..."
-                    value="{{ request.GET.q }}">
+        <ul class="navbar-nav me-auto">
 
-                <button
-                    class="btn btn-light"
-                    type="submit">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">
+                    Home
+                </a>
+            </li>
 
-                    <i class="bi bi-search"></i>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'products' %}">
+                    Products
+                </a>
+            </li>
 
-                </button>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">
+                    About
+                </a>
+            </li>
 
-            </form>
+            
 
-            <!-- Right Menu -->
+        </ul>
 
-            <ul class="navbar-nav">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cart' %}">
-                        <i class="bi bi-cart3"></i>
-                        Cart
-                    </a>
-                </li>
+        <!-- Search Bar -->
 
-                {% if user.is_authenticated %}
+        <form class="d-flex me-3"
+              method="GET"
+              action="{% url 'products' %}">
 
-                <li class="nav-item">
-    <a class="nav-link" href="{% url 'profile' %}">
-        <i class="bi bi-person-circle"></i>
-        {{ user.username }}
-    </a>
-</li>
+            <input
+                class="form-control me-2"
+                type="search"
+                name="q"
+                placeholder="Search products..."
+                value="{{ request.GET.q }}">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'my_orders' %}">
-                        <i class="bi bi-bag-check"></i>
-                        My Orders
-                    </a>
-                </li>
+            <button
+                class="btn btn-light"
+                type="submit">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Logout
-                    </a>
-                </li>
+                <i class="bi bi-search"></i>
 
-                {% else %}
+            </button>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">
-                        <i class="bi bi-box-arrow-in-right"></i>
-                        Login
-                    </a>
-                </li>
+        </form>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">
-                        <i class="bi bi-person-plus"></i>
-                        Register
-                    </a>
-                </li>
 
-                {% endif %}
+        <!-- Right Menu -->
 
-            </ul>
+        <ul class="navbar-nav">
 
-        </div>
+            <!-- Cart -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'cart' %}">
+
+                    <i class="bi bi-cart3"></i>
+                    Cart
+
+                </a>
+
+            </li>
+
+
+            {% if user.is_authenticated %}
+
+            <!-- Profile -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'profile' %}">
+
+                    <i class="bi bi-person-circle"></i>
+                    {{ user.username }}
+
+                </a>
+
+            </li>
+
+
+            <!-- My Orders -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'my_orders' %}">
+
+                    <i class="bi bi-bag-check"></i>
+                    My Orders
+
+                </a>
+
+            </li>
+
+
+            <!-- Logout -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'logout' %}">
+
+                    <i class="bi bi-box-arrow-right"></i>
+                    Logout
+
+                </a>
+
+            </li>
+
+
+            {% else %}
+
+            <!-- Login -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'login' %}">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Login
+
+                </a>
+
+            </li>
+
+
+            <!-- Register -->
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'register' %}">
+
+                    <i class="bi bi-person-plus"></i>
+                    Register
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
 
     </div>
+
+</div>
+
 
 </nav>
 
 <!-- ================= MAIN CONTENT ================= -->
 
-<div class="container mt-4">
+<div class="container mt-5 pt-4">
+{% if messages %}
 
-    {% if messages %}
+    {% for message in messages %}
 
-        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
 
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
 
-                {{ message }}
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert">
-                </button>
+        </div>
 
-            </div>
+    {% endfor %}
 
-        {% endfor %}
+{% endif %}
 
-    {% endif %}
 
-    {% block content %}
-    {% endblock %}
+{% block content %}
+{% endblock %}
 
 </div>
 
@@ -187,21 +233,23 @@
 
 <footer class="bg-dark text-white mt-5">
 
-    <div class="container text-center py-4">
+<div class="container text-center py-4">
 
-        <h5>Royal Nepal</h5>
+    <h5>
+        Royal Nepal
+    </h5>
 
-        <p>
-            Your trusted online shopping destination.
-        </p>
+    <p>
+        Your trusted online shopping destination.
+    </p>
 
-        <hr>
+    <hr>
 
-        <p class="mb-0">
-            © 2026 Royal Nepal. All Rights Reserved.
-        </p>
+    <p class="mb-0">
+        © 2026 Royal Nepal. All Rights Reserved.
+    </p>
 
-    </div>
+</div>
 
 </footer>
 
