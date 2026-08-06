@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import Cart, CartItem
 from products.models import Product
@@ -9,7 +10,10 @@ from products.models import Product
 def add_to_cart(request, product_id):
 
     product = get_object_or_404(Product, id=product_id)
-
+    if product.stock <=0:
+        messages.error(request,f"{product.name} is currently out of stock.")
+        return redirect("product_detail", id=product_id)
+    
     cart, created = Cart.objects.get_or_create(user=request.user)
 
     cart_item, item_created = CartItem.objects.get_or_create(
@@ -47,6 +51,12 @@ def cart(request):
 def increase_quantity(request, item_id):
 
     item = get_object_or_404(CartItem, id=item_id)
+
+    if item.quantity >= item.product.stock:
+
+        messages.warning(request, f"Only {item.product.stock} item(s) of {item.product.name} are available.")
+
+        return redirect("cart")
 
     item.quantity += 1
 
