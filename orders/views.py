@@ -119,6 +119,22 @@ def payment_success(request, order_id):
         user=request.user
     )
 
+    if order.stock_reduced:
+        messages.info(request, "Stock has already been reduced for this order.")
+
+    order_items = OrderItem.objects.filter(order=order)
+
+    for item in order_items:
+        product = item.product
+        print("stock before:", product.stock)
+        print("order quantity:", item.quantity)
+        if product.stock >= item.quantity:
+            product.stock -= item.quantity
+            product.save()
+
+    order.stock_reduced = True
+    order.save()
+
     return redirect(
         "order_success",
         order_id=order.id

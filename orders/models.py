@@ -48,6 +48,8 @@ class Order(models.Model):
         default="Pending Verification"
     )
 
+    stock_reduced = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
